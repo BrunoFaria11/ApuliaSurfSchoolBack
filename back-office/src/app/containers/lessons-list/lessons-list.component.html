@@ -1,0 +1,238 @@
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row mb-4">
+        <div class="col-11">
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-icon btn-primary" data-bs-toggle="modal" data-bs-target="#addLesson">
+                <span class="tf-icons bx bx-plus bx-22px"></span>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 order-2 mb-6">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title m-0 me-2">Aulas/Alugueres</h5>
+                </div>
+                <div class="card-body pt-4">
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-6 mt-5" *ngFor="let reservation of reservations; index as i">
+                            <div class="card p-2 h-100 shadow-none border">
+                                <div class="card-body p-4 pt-2">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <span class="badge bg-label-warning"
+                                            *ngIf="!reservation.IsValidated && !reservation.IsCanceled && !reservation.completed">PENDENTE</span>
+                                        <span class="badge bg-label-info"
+                                            *ngIf="reservation.IsValidated && !reservation.IsCanceled && !reservation.completed">CONFIRMADA</span>
+                                        <span class="badge bg-label-secondary"
+                                            *ngIf="!reservation.IsValidated && reservation.completed">NÃO
+                                            APROVADA</span>
+                                        <span class="badge bg-label-success"
+                                            *ngIf="reservation.IsValidated && !reservation.IsCanceled && reservation.completed">COMPLETA</span>
+                                        <span class="badge bg-label-danger"
+                                            *ngIf="reservation.IsCanceled">CANCELADA</span>
+                                        <p class="d-flex align-items-center justify-content-center gap-1 mb-0">
+                                            <span class="text-warning"></span><span class="fw-normal"> {{i + 1}}</span>
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <a class="h5">{{reservation.type}}</a>
+                                        </div>
+                                        <div class="col-3">
+                                            <span class="badge bg-label-danger" *ngIf="!reservation.IsPaid">POR
+                                                PAGAR</span>
+                                            <span class="badge bg-label-success" *ngIf="reservation.IsPaid">PAGO</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <h6 class="fw-normal mb-0">{{reservation.date}}</h6>
+                                        </div>
+                                        <div class="col-3">
+                                            <h6 class="fw-normal mb-0">{{reservation.hour}}</h6>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <p class="mt-1">{{reservation.comment}} &nbsp;</p>
+                                    <div *ngIf="!reservation.completed && !reservation.IsCanceled"
+                                        class="d-flex flex-column flex-md-row gap-4 text-nowrap flex-wrap flex-md-nowrap flex-lg-wrap flex-xxl-nowrap mb-2">
+                                        <a *ngIf="!reservation.IsPaid && reservation.IsValidated"
+                                            class="w-100 btn btn-success d-flex align-items-center"
+                                            style="color: white;" (click)="markAsPaid(reservation.idReservation)">
+                                            <i class="bx bx-money bx-sm align-middle me-2"></i>
+                                            <span>Marcar como pago</span>
+                                        </a>
+                                        <a *ngIf="!reservation.IsValidated"
+                                            class="w-100 btn btn-primary d-flex align-items-center"
+                                            style="color: white;" data-bs-toggle="modal"
+                                            data-bs-target="#validateLesson"
+                                            (click)="selectReservation(reservation.idReservation)">
+                                            <span class="me-2">Aprovar</span><i
+                                                class="bx bx-check bx-sm lh-1 scaleX-n1-rtl"></i>
+                                        </a>
+                                    </div>
+                                    <a *ngIf="!reservation.IsCanceled && !reservation.completed"
+                                        class="w-100 btn btn-secondary d-flex align-items-center" style="color: white;"
+                                        (click)="cancel(reservation.idReservation)">
+                                        <span class="me-2">Cancelar</span><i
+                                            class="bx bx-x bx-sm lh-1 scaleX-n1-rtl"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addLesson" tabindex="-1" aria- labelledby="addLessonLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="addLessonLabel">Registar aula</h5>
+                <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-danger">
+                <form [formGroup]="angForm" (ngSubmit)="submitReservation()">
+                    <div class="row mb-2">
+                        <div class="col-4">
+                            <label for="pack" class="form-label">Tipo de Reserva</label>
+                            <select class="form-select" formControlName="type">
+                                <option *ngFor="let reservation of reservationsType" [value]="reservation">
+                                    {{ reservation }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="angForm.get('type')?.invalid  && angFormSubmited"> Tipo
+                                de reserva
+                                is required.</div>
+                        </div>
+                        <div class="col-4">
+                            <label for="name" class="form-label">Data</label>
+                            <input class="form-control" formControlName="classDate" min="{{ minDate }}" type="date" />
+                            <div class="invalid-feedback" *ngIf="angForm.get('classDate')?.invalid  && angFormSubmited">
+                                Data is required.</div>
+                        </div>
+                        <div class="col-4">
+                            <label for="pack" class="form-label">Horas</label>
+                            <select class="form-select" formControlName="hour">
+                                <option *ngFor="let time of times" [value]="time">
+                                    {{ time }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="angForm.get('hour')?.invalid  && angFormSubmited"> Hora
+                                da reserva
+                                is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label for="comments" class="form-label">Observações</label>
+                            <input class="form-control" formControlName="comments" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
+                            <div class="form-floating mb-3">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-md" type="submit">
+                                        Registar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="validateLesson" tabindex="-1" aria- labelledby="validateLesson" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="validateLesson">Confirmar aula</h5>
+                <button type="button" id="closeModalValidate" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-danger">
+                <form [formGroup]="angFormToValidate" (ngSubmit)="markAsValidated()">
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label for="name" class="form-label">Data</label>
+                            <input class="form-control" formControlName="classDate" min="{{ minDate }}" type="date" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormToValidate.get('classDate')?.invalid  && angFormToValidateSubmited">
+                                Data is required.</div>
+                        </div>
+                        <div class="col-6">
+                            <label for="pack" class="form-label">Horas</label>
+                            <select class="form-select" formControlName="hour">
+                                <option *ngFor="let time of times" [value]="time">
+                                    {{ time }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback"
+                                *ngIf="angFormToValidate.get('hour')?.invalid  && angFormToValidateSubmited"> Hora
+                                da reserva
+                                is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label for="comments" class="form-label">Observações</label>
+                            <input class="form-control" formControlName="comments" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
+                            <div class="form-floating mb-3">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-md" type="submit">
+                                        Aprovar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bs-toast toast fade show bg-success toast-placement-ex m-5 top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true" *ngIf="showAlertSuccess">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Sucesso</div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Sucesso
+    </div>
+</div>
+
+<div class="bs-toast toast fade show bg-danger toast-placement-ex m-5 top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true" *ngIf="showAlertError">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Erro</div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{error}}
+    </div>
+</div>

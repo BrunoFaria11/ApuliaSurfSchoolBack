@@ -1,0 +1,225 @@
+<div class="col-12 mb-6" *ngIf="isSearched">
+    <div class="card mb-4" *ngFor="let client of clients">
+        <div class="row row-bordered g-0">
+            <div class="col-lg-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="card-title mb-0">
+                        <div class="row">
+                            <div class="col-10">
+                                <h5 class="m-0 me-2"> {{ client.Name }}</h5>
+                            </div>
+                            <div class="col-2" *ngIf="client.Level != null">
+                                <span class="badge" [ngStyle]="{'background-color': client.LevelColor}" >{{ client.Level }}</span>
+                            </div>
+                            <div class="col-2" *ngIf="client.Level == null">
+                                <span class="badge bg-label-warning">Iniciante</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-5">
+                            <small class="d-block">Email</small>
+                            <h6 class="fw-normal mb-0"> {{ client.Email }}</h6>
+                        </div>
+                        <div class="col-12 mb-5">
+                            <small class="d-block">Telefone</small>
+                            <h6 class="fw-normal mb-0">{{ client.PhoneNumber }}</h6>
+                        </div>
+                        <div class="col-12 mb-5">
+                            <small class="d-block">Notas</small>
+                            <h6 class="fw-normal mb-0">{{ client.Notes }}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 ">
+                <div class="card-header ">
+                    <div class="row">
+                        <div class="col-11">
+
+                        </div>
+                        <div class="col-1">
+                            <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                                <div class="dropdown">
+                                    <button class="btn p-0" type="button" id="cardOpt4" data-bs-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class="bx bx-dots-vertical-rounded text-muted"></i>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt4">
+                                        <a class="dropdown-item" [routerLink]="['/pack', client.Id]"
+                                            target="_blank">Packs</a>
+                                        <a class="dropdown-item" [routerLink]="['/reservation', client.Id]"
+                                            target="_blank">Aulas</a>
+                                        <a class="dropdown-item" href="#" (click)="selectUser(client.Id)" data-bs-toggle="modal" data-bs-target="#clientUpdateModal">Perfil</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-5 mb-5">
+                            <li class="d-flex align-items-center mb-5">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="avatar-initial rounded bg-label-primary"><i
+                                            class="bx bx-package"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">Packs ativos</h6>
+                                    </div>
+                                    <div class="user-progress">
+                                        <h6 class="mb-0">{{ client.ActivePacks }}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-5  mb-5">
+                            <li class="d-flex align-items-center mb-5">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="avatar-initial rounded bg-label-warning"><i
+                                            class="bx bx-user-check"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">Aulas por validar</h6>
+                                    </div>
+                                    <div class="user-progress">
+                                        <h6 class="mb-0">{{ client.NewLessons }}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5 mb-5">
+                            <li class="d-flex align-items-center mb-5">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="avatar-initial rounded bg-label-success"><i
+                                            class="bx bx-package"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">Total Packs</h6>
+                                    </div>
+                                    <div class="user-progress">
+                                        <h6 class="mb-0">{{ client.TotalPacks }}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-5  mb-5">
+                            <li class="d-flex align-items-center mb-5">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span class="avatar-initial rounded bg-label-success"><i
+                                            class="bx bx-calendar-check"></i></span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">Total Aulas</h6>
+                                    </div>
+                                    <div class="user-progress">
+                                        <h6 class="mb-0">{{ client.TotalLessons }}</h6>
+                                    </div>
+                                </div>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-12 mb-6" *ngIf="notFound">
+    <div class="card">
+        <div class="row row-bordered g-0">
+            <div class="col-lg-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+
+                </div>
+                <div class="card-body">
+                    <label class="form-label" for="basic-default-company">Not Found</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="clientUpdateModal" tabindex="-1" aria- labelledby="clientUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="clientUpdateModalLabel">Editar aluno</h5>
+                <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-danger">
+                <form [formGroup]="angFormUpdateClient" (ngSubmit)="onClickSubmit()">
+                    <div class="row mb-2">
+                        <div class="col-4">
+                            <label for="name" class="form-label">Nome</label>
+                            <input class="form-control" formControlName="name" type="text" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormUpdateClient.get('name')?.invalid && angFormUpdateClientSubmited">
+                                Nome is required.</div>
+                        </div>
+                        <div class="col-2">
+                            <label for="name" class="form-label">Indicador</label>
+                            <select class="form-control" formControlName="phoneIndicator"
+                                data-sb-validations="required">
+                                <option *ngFor="let item of listPhoneIndicators" [value]="item.dial_code">
+                                    {{item.code}} {{item.emoji}} {{item.dial_code}}</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="name" class="form-label">Telefone</label>
+                            <input class="form-control" formControlName="phone" type="text" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormUpdateClient.get('phone')?.invalid  && angFormUpdateClientSubmited">
+                                Telefone is required.</div>
+                        </div>
+                        <div class="col-3">
+                            <label for="name" class="form-label">Nivel</label>
+                            <select class="form-control" formControlName="level">
+                                <option value="Iniciante" selected>Iniciante</option>
+                                <option value="Nível A">Nível A</option>
+                                <option value="Nível A+">Nível A+</option>
+                                <option value="Nível 2">Nível 2</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                            <div class="invalid-feedback"
+                                *ngIf="angFormUpdateClient.get('level')?.invalid  && angFormUpdateClientSubmited">
+                                Nivel is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label for="notes" class="form-label">Observações</label>
+                            <input class="form-control" formControlName="notes" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
+                            <div class="form-floating mb-3">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-md" type="submit">
+                                        Editar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

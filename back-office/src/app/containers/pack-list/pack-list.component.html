@@ -1,0 +1,238 @@
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row mb-4">
+        <div class="col-11">
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-icon btn-primary" data-bs-toggle="modal" data-bs-target="#packModal">
+                <span class="tf-icons bx bx-plus bx-22px"></span>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card mb-6">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Packs</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12 col-xxl-12 mb-6" *ngFor="let item of packs">
+                            <div class="card h-100">
+                                <div class="card-header d-flex justify-content-between">
+                                    <div class="card-title mb-0">
+
+                                        <h5 class="mb-1 me-2">{{item.type}}</h5>
+                                        <p class="card-subtitle">{{item.creationDate}}</p>
+
+                                    </div>
+                                    <div class="dropdown" *ngIf="item.isActive || !item.isPaid">
+                                        <button class="btn text-muted p-0" type="button" id="" data-bs-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-dots-vertical-rounded bx-lg"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end"  >
+                                            <button class="dropdown-item" data-bs-toggle="modal"
+                                                (click)="selectPack(item.id,item.type)"
+                                                data-bs-target="#addLesson"  *ngIf="item.isActive">Registar Aula</button>
+
+                                            <button class="dropdown-item" data-bs-toggle="modal"
+                                                (click)="markAsPaid(item.id)" *ngIf="!item.isPaid">Marcar como
+                                                pago</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body pt-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-6"
+                                        style="position: relative;">
+                                        <div class="d-flex flex-row align-items-center gap-2">
+                                            <h3 class="mb-0">{{item.classesAttended}}</h3>
+                                            <small class="text-success"> / {{item.totalClasses}}
+                                            </small>
+                                        </div>
+                                        <span class="badge bg-label-success" *ngIf="item.isActive">ATIVO</span>
+                                        <span class="badge bg-label-warning" *ngIf="!item.isActive">COMPLETO</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="d-flex justify-content-between align-items-center mb-6"
+                                                style="position: relative;">
+                                                <span class="badge bg-label-success" *ngIf="item.isPaid">PAGO</span>
+                                                <span class="badge bg-label-danger" *ngIf="!item.isPaid">POR
+                                                    PAGAR</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="p-0 m-0">
+                                        <li class="d-flex mb-6"
+                                            *ngFor="let reservation of item.reservations; index as i">
+                                            <div class="d-flex w-100 flex-wrap justify-content-between gap-2">
+                                                <div class="me-2">
+                                                    <h6 class="mb-0 fw-normal">Aula - #{{i+1}} - {{reservation.type}}
+                                                    </h6>
+                                                </div>
+                                                <div class="user-progress">
+                                                    <span>{{reservation.date}}</span>
+                                                </div>
+                                                <div class="user-progress">
+                                                    <span>{{reservation.hour}}</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addLesson" tabindex="-1" aria- labelledby="addLessonLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="addLessonLabel">Registar aula</h5>
+                <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-danger">
+                <form [formGroup]="angForm" (ngSubmit)="submitReservation()">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="name" class="form-label">Data</label>
+                            <input class="form-control" formControlName="classDate" min="{{ minDate }}" type="date" />
+                            <div class="invalid-feedback" *ngIf="angForm.get('classDate')?.invalid  && angFormSubmited">
+                                Data is required.</div>
+                        </div>
+                        <div class="col-6">
+                            <label for="pack" class="form-label">Horas</label>
+                            <select class="form-select" formControlName="hour">
+                                <option *ngFor="let time of times" [value]="time">
+                                    {{ time }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="angForm.get('hour')?.invalid  && angFormSubmited"> Hora
+                                da reserva
+                                is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label for="comments" class="form-label">Observações</label>
+                            <input class="form-control" formControlName="comments" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
+                            <div class="form-floating mb-3">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-md" type="submit">
+                                        Registar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="packModal" tabindex="-1" aria- labelledby="packModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="packModalLabel">Criar pack</h5>
+                <button type="button" id="closeModalPack" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-danger">
+                <form [formGroup]="angFormToCreatePack" (ngSubmit)="submitPack()">
+                    <div class="row mb-2">
+                        <div class="col-4">
+                            <label for="pack" class="form-label">Pack</label>
+                            <select class="form-select" formControlName="type">
+                                <option *ngFor="let pack of packsType" [value]="pack.type">
+                                    {{ pack.type }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback"
+                                *ngIf="angFormToCreatePack.get('type')?.invalid  && angFormToCreatePackSubmited"> Pack
+                                is required.</div>
+                        </div>
+                        <div class="col-4">
+                            <label for="name" class="form-label">Data</label>
+                            <input class="form-control" formControlName="classDate" min="{{ minDate }}" type="date" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormToCreatePack.get('classDate')?.invalid  && angFormToCreatePackSubmited">
+                                Data is required.</div>
+                        </div>
+                        <div class="col-4">
+                            <label for="pack" class="form-label">Horas</label>
+                            <select class="form-select" formControlName="hour">
+                                <option *ngFor="let time of times" [value]="time">
+                                    {{ time }}
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" *ngIf="angFormToCreatePack.get('hour')?.invalid  && angFormToCreatePackSubmited"> Hora
+                                da reserva
+                                is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label for="comments" class="form-label">Observações</label>
+                            <input class="form-control" formControlName="comments" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
+                            <div class="form-floating mb-3">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-md" type="submit">
+                                        Registar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="bs-toast toast fade show bg-success toast-placement-ex m-5 top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true" *ngIf="showAlertSuccess">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Sucesso</div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Sucesso
+    </div>
+</div>
+
+<div class="bs-toast toast fade show bg-danger toast-placement-ex m-5 top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true" *ngIf="showAlertError">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Erro</div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{error}}
+    </div>
+</div>

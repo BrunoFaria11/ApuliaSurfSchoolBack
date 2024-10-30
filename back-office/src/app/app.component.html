@@ -1,0 +1,85 @@
+<div class="layout-wrapper layout-content-navbar" *ngIf="(auth.isLoading$ | async) === false && (auth.isAuthenticated$ | async) === true">
+  <div class="layout-container">
+    <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+      <div class="app-brand demo">
+        <img src="../assets/img/logo.png" width="70" style="    margin-left: 25%;">
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+          <i class="bx bx-chevron-left bx-sm d-flex align-items-center justify-content-center"></i>
+        </a>
+      </div>
+      <div class="menu-inner-shadow"></div>
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Menu</span>
+      </li>
+      <ul class="menu-inner py-1">
+        <li class="menu-item" [ngClass]="{'active': activeMenu === 'dashboard'}">
+          <a href="dashboard" class="menu-link" (click)="setActive('dashboard')">
+            <i class="menu-icon tf-icons bx bx-tachometer"></i>
+            <div class="text-truncate" data-i18n="Dashboards">Dashboard</div>
+          </a>
+        </li>
+        <li class="menu-item" [ngClass]="{'active': activeMenu === 'calendar'}">
+          <a href="calendar" class="menu-link" (click)="setActive('calendar')">
+            <i class="menu-icon tf-icons bx bx-calendar"></i>
+            <div class="text-truncate" data-i18n="Email">Agenda</div>
+          </a>
+        </li>
+        <li class="menu-item" [ngClass]="{'active': activeMenu === 'user'}">
+          <a href="user" class="menu-link" (click)="setActive('user')">
+            <i class="menu-icon tf-icons bx bx-user"></i>
+            <div class="text-truncate" data-i18n="Email">Alunos</div>
+          </a>
+        </li>
+      </ul>
+    </aside>
+    <div class="layout-page">
+      <nav
+        class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+        id="layout-navbar">
+        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
+          <a class="nav-item nav-link px-0 me-xl-6" href="javascript:void(0)">
+            <i class="bx bx-menu bx-md"></i>
+          </a>
+        </div>
+
+        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+          <ul class="navbar-nav flex-row align-items-center ms-auto">
+            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+              <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
+                <div class="avatar avatar-online">
+                  <img src="../assets/img/logo.png" alt class="w-px-40 h-auto rounded-circle" />
+                </div>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item" href="#">
+                    <div class="d-flex">
+                      <div class="flex-shrink-0 me-3">
+                        <div class="avatar avatar-online">
+                          <img src="../assets/img/logo.png" alt class="w-px-40 h-auto rounded-circle" />
+                        </div>
+                      </div>
+                      <div class="flex-grow-1">
+                        <h6 class="mb-0">Apulia surf school</h6>
+                        <small class="text-muted">Admin</small>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <div class="dropdown-divider my-1"></div>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="logOut()">
+                    <i class="bx bx-power-off bx-md me-3"></i><span>Log Out</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

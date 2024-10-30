@@ -1,0 +1,151 @@
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row mb-4">
+        <div class="col-11">
+        </div>
+        <div class="col-1">
+            <button type="button" class="btn btn-icon btn-primary" data-bs-toggle="modal" data-bs-target="#clientModal">
+                <span class="tf-icons bx bx-plus bx-22px"></span>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card mb-6">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Alunos</h5>
+                </div>
+
+                <div class="card-body">
+                    <form [formGroup]="angForm" (ngSubmit)="onClickSearch()">
+                        <div class="row">
+                            <div class="col-4 mb-4">
+                                <label class="form-label" for="basic-default-fullname">Email</label>
+                                <input type="text" class="form-control" formControlName="email">
+                                <div class="invalid-feedback" *ngIf="showErrorMsg">
+                                    Email ou Telefone não validos.</div>
+                            </div>
+                            <div class="col-3 mb-4">
+                                <label class="form-label" for="basic-default-company">Nome</label>
+                                <input type="text" class="form-control" formControlName="name">
+                            </div>
+                            <div class="col-3 mb-4">
+                                <label class="form-label" for="basic-default-company">Numero Telefone</label>
+                                <input type="text" class="form-control" formControlName="phone">
+                            </div>
+                            <div class="col-2 mb-4 mt-6">
+                                <button type="submit" class="btn btn-success">Pesquisar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <app-user-table [clients]="clients" [isSearched]="isSearched" [notFound]="notFound"></app-user-table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="clientModal" tabindex="-1" aria- labelledby="clientModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title " id="clientModalLabel">Criar aluno</h5>
+                <button type="button" id="closeModal" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-danger">
+                <form [formGroup]="angFormCreateClient" (ngSubmit)="onClickSubmit()">
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <label for="name" class="form-label">Nome</label>
+                            <input class="form-control" formControlName="name" type="text" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormCreateClient.get('name')?.invalid && angFormCreateClientSubmited">
+                                Nome is required.</div>
+                        </div>
+                        <div class="col-6">
+                            <label for="name" class="form-label">Email</label>
+                            <input class="form-control" formControlName="email" type="text" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormCreateClient.get('email')?.invalid  && angFormCreateClientSubmited">
+                                Email is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-2">
+                            <label for="name" class="form-label">Indicador</label>
+                            <select class="form-control" formControlName="phoneIndicator"
+                                data-sb-validations="required">
+                                <option *ngFor="let item of listPhoneIndicators" [value]="item.dial_code">
+                                    {{item.code}} {{item.emoji}} {{item.dial_code}}</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="name" class="form-label">Telefone</label>
+                            <input class="form-control" formControlName="phone" type="text" />
+                            <div class="invalid-feedback"
+                                *ngIf="angFormCreateClient.get('phone')?.invalid  && angFormCreateClientSubmited">
+                                Telefone is required.</div>
+                        </div>
+                        <div class="col-6">
+                            <label for="name" class="form-label">Nivel</label>
+                            <select class="form-control" formControlName="level">
+                                <option value="Iniciante" selected>Iniciante</option>
+                                <option value="Nível A">Nível A</option>
+                                <option value="Nível A+">Nível A+</option>
+                                <option value="Nível 2">Nível 2</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                            <div class="invalid-feedback"
+                                *ngIf="angFormCreateClient.get('level')?.invalid  && angFormCreateClientSubmited">
+                                Nivel is required.</div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <label for="comments" class="form-label">Observações</label>
+                            <input class="form-control" formControlName="comments" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                        </div>
+                        <div class="col-2">
+                            <div class="form-floating mb-3">
+                                <div class="d-grid">
+                                    <button type="button" class="btn btn-primary btn-md" type="submit">
+                                        Criar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="bs-toast toast fade show bg-success toast-placement-ex m-5 top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true" *ngIf="showAlertSuccess">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Sucesso</div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Sucesso
+    </div>
+</div>
+
+<div class="bs-toast toast fade show bg-danger toast-placement-ex m-5 top-0 end-0" role="alert" aria-live="assertive"
+    aria-atomic="true" *ngIf="showAlertError">
+    <div class="toast-header">
+        <i class="bx bx-bell me-2"></i>
+        <div class="me-auto fw-medium">Erro</div>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{error}}
+    </div>
+</div>
