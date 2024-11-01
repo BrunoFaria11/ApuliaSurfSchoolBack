@@ -16,7 +16,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { DashboardComponent } from "./containers/dashboard/dashboard.component";
 import { AgendaComponent } from "./components/agenda/agenda.component";
 import { AuthModule } from "@auth0/auth0-angular";
-import { authConfig } from '../core/services/auth';
+import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [AppComponent, UserTableComponent, AgendaComponent, UserComponent, UserTableComponent, CalendarComponent, PackListComponent, LessonsListComponent, DashboardComponent],
@@ -31,14 +31,18 @@ import { authConfig } from '../core/services/auth';
             useFactory: adapterFactory,
         }),
         AuthModule.forRoot({
-            ...authConfig.auth,
-            httpInterceptor: {
-                ...authConfig.httpInterceptor,
+            domain:  environment.domain,
+            clientId: environment.clientId,
+            authorizationParams: {
+              redirect_uri:  environment.redirect_uri,
+              audience: environment.audience,
+              scope:  environment.scope, 
             },
             useRefreshTokens: true
-        }),
+          }),
     ],
     providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
+
