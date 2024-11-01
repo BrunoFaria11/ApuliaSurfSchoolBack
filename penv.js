@@ -12,7 +12,6 @@ const envFile = `export const environment = {
     clientId: '${process.env.clientId}',
     redirect_uri: '${process.env.redirect_uri}',
     audience: '${process.env.audience}',
-    scope: '${process.env.scope}',
 };
 `;
 

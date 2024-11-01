@@ -36,7 +36,7 @@ import { environment } from '../environments/environment';
             authorizationParams: {
               redirect_uri:  environment.redirect_uri,
               audience: environment.audience,
-              scope:  environment.scope, 
+              scope:  'openid profile email offline_access', 
             },
             useRefreshTokens: true
           }),

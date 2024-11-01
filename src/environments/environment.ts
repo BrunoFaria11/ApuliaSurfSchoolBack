@@ -6,5 +6,4 @@ export const environment = {
     clientId: '',
     redirect_uri: '',
     audience: '',
-    scope: '',
 };
